@@ -4,6 +4,7 @@ import logo from "../../assets/images/logo.svg";
 import { useEditorialCounts } from "../../context/EditorialCountsContext";
 import { useSupportCounts } from "../../context/SupportCountsContext";
 import { defaultSalesRange, defaultUsersRange, saleDashboardPath, userDashboardPath } from "../../utils/analyticsDateRoute";
+import { showMarketingAdmin } from "../../../utils/deployMode";
 
 function editorialTabActive(location, expectedTab) {
   if (expectedTab === "gallery") {
@@ -95,6 +96,7 @@ function menusForPath(pathname) {
 }
 
 function AdminSidebar({ onLogout }) {
+  const marketingAdmin = showMarketingAdmin();
   const location = useLocation();
   const salesNavTo = useMemo(() => {
     const { start, end } = defaultSalesRange();
@@ -328,40 +330,44 @@ function AdminSidebar({ onLogout }) {
               <span>Manage Country</span>
             </NavLink>
           </li>
-          <li className="menu-list">
-            <NavLink to="/admindashboard/manage_coupon" className="menu-parent">
-              <span className="menu-icon-svg" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="16" height="16">
-                  <path
-                    fill="currentColor"
-                    d="M7 4a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V9.83a3 3 0 0 0-.88-2.12l-3.83-3.83A3 3 0 0 0 13.17 4H7Zm0 2h6v4h4v9a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Zm8 .41L18.59 10H15V6.41ZM9 12h6v2H9v-2Zm0 4h4v2H9v-2Z"
-                  />
-                </svg>
-              </span>
-              <span>Manage Coupons</span>
-            </NavLink>
-          </li>
-          <li className={`menu-list has-children ${openMenus.marketing ? "expanded" : ""}`}>
-            <button type="button" className="menu-parent menu-parent-btn" onClick={() => toggleMenu("marketing")}>
-              <span className="menu-icon-svg" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="16" height="16">
-                  <path
-                    fill="currentColor"
-                    d="M3 5a2 2 0 0 1 2-2h4l2 2h10a2 2 0 0 1 2 2v3H3V5Zm0 7h20v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7Zm6 2v2h2v-2H9Zm4 0v2h6v-2h-6Z"
-                  />
-                </svg>
-              </span>
-              <span>Marketing</span>
-              <span className="menu-arrow">{openMenus.marketing ? "⌄" : "›"}</span>
-            </button>
-            {openMenus.marketing && (
-              <ul className="child-list">
-                <li>
-                  <NavLink to="/admindashboard/redemption_codes">Redemption Codes</NavLink>
-                </li>
-              </ul>
-            )}
-          </li>
+          {marketingAdmin ? (
+            <>
+              <li className="menu-list">
+                <NavLink to="/admindashboard/manage_coupon" className="menu-parent">
+                  <span className="menu-icon-svg" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16">
+                      <path
+                        fill="currentColor"
+                        d="M7 4a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V9.83a3 3 0 0 0-.88-2.12l-3.83-3.83A3 3 0 0 0 13.17 4H7Zm0 2h6v4h4v9a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Zm8 .41L18.59 10H15V6.41ZM9 12h6v2H9v-2Zm0 4h4v2H9v-2Z"
+                      />
+                    </svg>
+                  </span>
+                  <span>Manage Coupons</span>
+                </NavLink>
+              </li>
+              <li className={`menu-list has-children ${openMenus.marketing ? "expanded" : ""}`}>
+                <button type="button" className="menu-parent menu-parent-btn" onClick={() => toggleMenu("marketing")}>
+                  <span className="menu-icon-svg" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16">
+                      <path
+                        fill="currentColor"
+                        d="M3 5a2 2 0 0 1 2-2h4l2 2h10a2 2 0 0 1 2 2v3H3V5Zm0 7h20v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7Zm6 2v2h2v-2H9Zm4 0v2h6v-2h-6Z"
+                      />
+                    </svg>
+                  </span>
+                  <span>Marketing</span>
+                  <span className="menu-arrow">{openMenus.marketing ? "⌄" : "›"}</span>
+                </button>
+                {openMenus.marketing && (
+                  <ul className="child-list">
+                    <li>
+                      <NavLink to="/admindashboard/redemption_codes">Redemption Codes</NavLink>
+                    </li>
+                  </ul>
+                )}
+              </li>
+            </>
+          ) : null}
           <li className={`menu-list has-children ${openMenus.managePaymentHistory ? "expanded" : ""}`}>
             <button type="button" className="menu-parent menu-parent-btn" onClick={() => toggleMenu("managePaymentHistory")}>
               <span className="menu-icon-svg" aria-hidden="true">

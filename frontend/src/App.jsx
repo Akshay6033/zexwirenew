@@ -78,6 +78,7 @@ import {
   SaleDashboardRedirect,
   UserDashboardRedirect
 } from "./admin/components/AnalyticsRouteRedirects";
+import { isTestDeploy, showMarketingAdmin, showPublicSite } from "./utils/deployMode";
 
 function ExternalRedirect({ url }) {
   useEffect(() => {
@@ -111,14 +112,21 @@ function AppCatchAll() {
   if (token) {
     return <Navigate to="/admindashboard/manage_editorial" replace />;
   }
+  if (isTestDeploy()) {
+    return <Navigate to="/core" replace />;
+  }
   return <Navigate to="/" replace />;
 }
 
 function App() {
+  const publicSite = showPublicSite();
+  const marketingAdmin = showMarketingAdmin();
+
   return (
     <BrowserRouter>
       <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
+        {publicSite ? (
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/newsroom/:slug" element={<NewsroomArticlePage />} />
@@ -163,11 +171,13 @@ function App() {
           <Route path="/checkout/success/:paymentId" element={<CheckoutSuccessPage />} />
           <Route path="/checkout/failed" element={<CheckoutFailedPage />} />
         </Route>
+        ) : null}
 
         <Route path="/core" element={<AdminLoginRoute />} />
         <Route path="/coreadmin" element={<Navigate to="/core" replace />} />
         <Route path="/core-admin" element={<Navigate to="/core" replace />} />
         <Route path="/login" element={<Navigate to="/core" replace />} />
+        {publicSite ? (
         <Route element={<AuthLayout />}>
           <Route
             path="/sign_up"
@@ -188,7 +198,9 @@ function App() {
           <Route path="/forgot_password" element={<ForgotPasswordPage />} />
           <Route path="/forg_password/:id" element={<ResetPasswordPage />} />
         </Route>
+        ) : null}
 
+        {publicSite ? (
         <Route
           path="/Userdashboard"
           element={
@@ -207,6 +219,7 @@ function App() {
           <Route path="contact_us" element={<UserDashboardPlaceholderPage name="Contact Us" />} />
           <Route path="profile" element={<UserProfilePage />} />
         </Route>
+        ) : null}
 
         <Route
           element={
@@ -226,14 +239,18 @@ function App() {
           <Route path="/admindashboard/manage_distribution" element={<ManageDistributionPage />} />
           <Route path="/admindashboard/manage_category" element={<ManageCategoryPage />} />
           <Route path="/admindashboard/manage_country" element={<ManageCountryPage />} />
-          <Route path="/admindashboard/manage_coupon" element={<ManageCouponsPage />} />
-          <Route path="/admindashboard/add_coupon" element={<AddCouponPage />} />
-          <Route path="/admindashboard/edit_coupon/:id" element={<EditCouponPage />} />
-          <Route path="/admindashboard/coupon_history/:id" element={<CouponHistoryPage />} />
-          <Route path="/admindashboard/redemption_codes" element={<ManageRedemptionCodesPage />} />
-          <Route path="/admindashboard/add_redemption_code" element={<AddRedemptionCodePage />} />
-          <Route path="/admindashboard/edit_redemption_code/:id" element={<EditRedemptionCodePage />} />
-          <Route path="/admindashboard/redemption_code_logs/:id" element={<RedemptionCodeLogsPage />} />
+          {marketingAdmin ? (
+            <>
+              <Route path="/admindashboard/manage_coupon" element={<ManageCouponsPage />} />
+              <Route path="/admindashboard/add_coupon" element={<AddCouponPage />} />
+              <Route path="/admindashboard/edit_coupon/:id" element={<EditCouponPage />} />
+              <Route path="/admindashboard/coupon_history/:id" element={<CouponHistoryPage />} />
+              <Route path="/admindashboard/redemption_codes" element={<ManageRedemptionCodesPage />} />
+              <Route path="/admindashboard/add_redemption_code" element={<AddRedemptionCodePage />} />
+              <Route path="/admindashboard/edit_redemption_code/:id" element={<EditRedemptionCodePage />} />
+              <Route path="/admindashboard/redemption_code_logs/:id" element={<RedemptionCodeLogsPage />} />
+            </>
+          ) : null}
           <Route path="/admindashboard/manage_newsletter" element={<ManageNewsletterPage />} />
           <Route path="/admindashboard/manage_payment_method" element={<ManagePaymentMethodPage />} />
           <Route path="/admindashboard/manage_payment_history" element={<ManagePaymentHistoryPage />} />
