@@ -1,4 +1,5 @@
 import api from "./authApi";
+import { getApiBaseUrl } from "../../utils/apiBase";
 
 export const adminDashboardApi = {
   getEditorialSummary: () => api.get("/admindashboard/editorial-summary"),
@@ -29,7 +30,7 @@ export const adminDashboardApi = {
   deletePressReleasePublished: (id) => api.delete(`/admindashboard/press-release/${id}/published`),
   exportEditorialPressReleasesCsvUrl: (params) => {
     const q = new URLSearchParams(params).toString();
-    return `http://localhost:5000/api/admindashboard/editorial-press-releases/export.csv?${q}`;
+    return `${getApiBaseUrl()}/admindashboard/editorial-press-releases/export.csv?${q}`;
   },
   getLoginLogs: (params) => api.get("/admindashboard/login-logs", { params }),
   getDistributions: (params) => api.get("/admindashboard/distributions", { params }),
@@ -81,7 +82,7 @@ export const adminDashboardApi = {
   },
   downloadInvoice: (invId) =>
     api.get(`/admindashboard/invoices/${invId}/download`, { responseType: "blob" }),
-  exportPaymentHistoryCsvUrl: () => "http://localhost:5000/api/admindashboard/payment-history/export.csv",
+  exportPaymentHistoryCsvUrl: () => `${getApiBaseUrl()}/admindashboard/payment-history/export.csv`,
   getPaymentMethods: (params) => api.get("/admindashboard/payment-methods", { params }),
   updatePaymentMethodStatus: (id, payload) => api.patch(`/admindashboard/payment-methods/${id}/status`, payload),
   getCoinbaseUsers: (id, params) => api.get(`/admindashboard/payment-methods/${id}/coinbase-users`, { params }),

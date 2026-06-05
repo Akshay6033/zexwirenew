@@ -51,7 +51,7 @@ function PricingSequencerPage() {
       const row = bannerRes.data?.data || { banner_image: "", banner_alt: "", banner_link: "" };
       setBanner(row);
       setInitialBanner(row);
-      setBannerPreview(row.banner_image ? `http://localhost:5000${row.banner_image}` : "");
+      setBannerPreview(row.banner_image ? `${(import.meta.env.VITE_UPLOADS_URL || import.meta.env.VITE_API_URL || "").replace(/\/(uploads|api)\/?$/, "")}${row.banner_image}` : "");
       return;
     }
     setBanner({ banner_image: "", banner_alt: "", banner_link: "" });

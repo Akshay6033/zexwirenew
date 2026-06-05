@@ -234,7 +234,7 @@ function ManageUsersPage() {
   };
 
   const downloadCsv = () => {
-    window.open("http://localhost:5000/api/users/export.csv", "_blank");
+    window.open(`${import.meta.env.VITE_API_URL || "/api"}/users/export.csv`, "_blank");
   };
 
   const handleRefreshClick = () => {

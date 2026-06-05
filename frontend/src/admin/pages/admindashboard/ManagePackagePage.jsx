@@ -155,7 +155,7 @@ function ManagePackagePage() {
       descriptions: (row.descriptions || []).map((item) => ({ des_option: item.des_option, des: item.des }))
     });
     setPackageImageFile(null);
-    setPackageImagePreview(row.package_image ? `http://localhost:5000${row.package_image}` : "");
+    setPackageImagePreview(row.package_image ? `${(import.meta.env.VITE_UPLOADS_URL || import.meta.env.VITE_API_URL || "").replace(/\/(uploads|api)\/?$/, "")}${row.package_image}` : "");
     setRemovePackageImage(false);
     setModalOpen(true);
   };

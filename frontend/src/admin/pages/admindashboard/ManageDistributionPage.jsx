@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { useConfirm } from "../../context/ConfirmContext";
 import { adminDashboardApi } from "../../services/adminDashboardApi";
+import { getApiOrigin } from "../../../utils/apiBase";
 
 const PAGE_SIZES = [10, 25, 50, 100];
 
@@ -21,10 +22,10 @@ function vendorFeedHref(row) {
   if (stored && /\/Feed\/RSS\//i.test(stored)) return stored;
 
   try {
-    const base = stored ? new URL(stored).origin : import.meta.env.VITE_API_URL?.replace(/\/api\/?$/, "") || "http://localhost:5000";
+    const base = stored ? new URL(stored).origin : getApiOrigin();
     return `${base}/Feed/RSS/${encodeURIComponent(name)}`;
   } catch {
-    return `http://localhost:5000/Feed/RSS/${encodeURIComponent(name)}`;
+    return `${getApiOrigin()}/Feed/RSS/${encodeURIComponent(name)}`;
   }
 }
 
