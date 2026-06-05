@@ -6,6 +6,12 @@ import PublicLayout from "./public/layout/PublicLayout";
 import HomePage from "./public/pages/HomePage";
 import NewsroomArticlePage from "./public/pages/NewsroomArticlePage";
 import PricingPage from "./public/pages/PricingPage";
+import CheckoutBillingPage from "./public/pages/checkout/CheckoutBillingPage";
+import CheckoutPaymentPage from "./public/pages/checkout/CheckoutPaymentPage";
+import CheckoutPaypalReturnPage from "./public/pages/checkout/CheckoutPaypalReturnPage";
+import CheckoutCoinbaseReturnPage from "./public/pages/checkout/CheckoutCoinbaseReturnPage";
+import CheckoutSuccessPage from "./public/pages/checkout/CheckoutSuccessPage";
+import CheckoutFailedPage from "./public/pages/checkout/CheckoutFailedPage";
 import AuthLayout from "./public/layout/AuthLayout";
 import SignInPage from "./public/pages/SignInPage";
 import SignUpPage from "./public/pages/SignUpPage";
@@ -24,6 +30,14 @@ import ManageDistributionPage from "./admin/pages/admindashboard/ManageDistribut
 import ManagePackagePage from "./admin/pages/admindashboard/ManagePackagePage";
 import PricingSequencerPage from "./admin/pages/admindashboard/PricingSequencerPage";
 import ManageCountryPage from "./admin/pages/admindashboard/ManageCountryPage";
+import ManageCouponsPage from "./admin/pages/admindashboard/ManageCouponsPage";
+import AddCouponPage from "./admin/pages/admindashboard/AddCouponPage";
+import EditCouponPage from "./admin/pages/admindashboard/EditCouponPage";
+import CouponHistoryPage from "./admin/pages/admindashboard/CouponHistoryPage";
+import ManageRedemptionCodesPage from "./admin/pages/admindashboard/ManageRedemptionCodesPage";
+import AddRedemptionCodePage from "./admin/pages/admindashboard/AddRedemptionCodePage";
+import EditRedemptionCodePage from "./admin/pages/admindashboard/EditRedemptionCodePage";
+import RedemptionCodeLogsPage from "./admin/pages/admindashboard/RedemptionCodeLogsPage";
 import ManageCategoryPage from "./admin/pages/admindashboard/ManageCategoryPage";
 import ManageNewsletterPage from "./admin/pages/admindashboard/ManageNewsletterPage";
 import ManagePaymentMethodPage from "./admin/pages/admindashboard/ManagePaymentMethodPage";
@@ -114,6 +128,40 @@ function App() {
           <Route path="/crypto_pricing" element={<Navigate to="/pricing/crypto" replace />} />
           <Route path="/indian_pricing" element={<Navigate to="/pricing/indian" replace />} />
           <Route path="/whitelable_pr_pricing" element={<Navigate to="/pricing/whitelabel" replace />} />
+          <Route
+            path="/checkout/:token"
+            element={
+              <UserPrivateRoute>
+                <CheckoutBillingPage />
+              </UserPrivateRoute>
+            }
+          />
+          <Route
+            path="/checkout/:token/pay"
+            element={
+              <UserPrivateRoute>
+                <CheckoutPaymentPage />
+              </UserPrivateRoute>
+            }
+          />
+          <Route
+            path="/checkout/:token/paypal/return"
+            element={
+              <UserPrivateRoute>
+                <CheckoutPaypalReturnPage />
+              </UserPrivateRoute>
+            }
+          />
+          <Route
+            path="/checkout/:token/coinbase/return"
+            element={
+              <UserPrivateRoute>
+                <CheckoutCoinbaseReturnPage />
+              </UserPrivateRoute>
+            }
+          />
+          <Route path="/checkout/success/:paymentId" element={<CheckoutSuccessPage />} />
+          <Route path="/checkout/failed" element={<CheckoutFailedPage />} />
         </Route>
 
         <Route path="/core" element={<AdminLoginRoute />} />
@@ -178,6 +226,14 @@ function App() {
           <Route path="/admindashboard/manage_distribution" element={<ManageDistributionPage />} />
           <Route path="/admindashboard/manage_category" element={<ManageCategoryPage />} />
           <Route path="/admindashboard/manage_country" element={<ManageCountryPage />} />
+          <Route path="/admindashboard/manage_coupon" element={<ManageCouponsPage />} />
+          <Route path="/admindashboard/add_coupon" element={<AddCouponPage />} />
+          <Route path="/admindashboard/edit_coupon/:id" element={<EditCouponPage />} />
+          <Route path="/admindashboard/coupon_history/:id" element={<CouponHistoryPage />} />
+          <Route path="/admindashboard/redemption_codes" element={<ManageRedemptionCodesPage />} />
+          <Route path="/admindashboard/add_redemption_code" element={<AddRedemptionCodePage />} />
+          <Route path="/admindashboard/edit_redemption_code/:id" element={<EditRedemptionCodePage />} />
+          <Route path="/admindashboard/redemption_code_logs/:id" element={<RedemptionCodeLogsPage />} />
           <Route path="/admindashboard/manage_newsletter" element={<ManageNewsletterPage />} />
           <Route path="/admindashboard/manage_payment_method" element={<ManagePaymentMethodPage />} />
           <Route path="/admindashboard/manage_payment_history" element={<ManagePaymentHistoryPage />} />

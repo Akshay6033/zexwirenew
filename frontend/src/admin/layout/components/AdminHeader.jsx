@@ -49,7 +49,9 @@ function AdminHeader({ username, onLogout, onProfile, onToggleRightBar }) {
             >
               <span className="bell-icon">🔔</span>
               {supportUnread > 0 ? (
-                <span className="bell-badge">{supportUnread > 99 ? "99+" : supportUnread}</span>
+                <span className="bell-badge bell-badge-red">
+                  {supportUnread > 99 ? "99+" : supportUnread}
+                </span>
               ) : null}
             </button>
           </li>

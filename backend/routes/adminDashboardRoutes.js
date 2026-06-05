@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const adminDashboardController = require("../controllers/adminDashboardController");
 const adminSupportController = require("../controllers/adminSupportController");
+const adminCouponController = require("../controllers/adminCouponController");
+const adminRedemptionController = require("../controllers/adminRedemptionController");
 const analyticsController = require("../controllers/analyticsController");
 const { uploadPackageImage, uploadBannerImage, uploadInvoicePdf } = require("../middleware/uploadMedia");
 const { uploadChatFile } = require("../middleware/uploadChat");
@@ -94,5 +96,29 @@ router.post("/support/tickets/:id/messages", uploadChatFile, adminSupportControl
 router.post("/support/tickets/:id/resolve", adminSupportController.resolveTicket);
 router.post("/support/tickets/:id/approve", adminSupportController.approveTicket);
 router.post("/support/tickets/:id/decline", adminSupportController.declineTicket);
+
+router.get("/coupons", adminCouponController.getCoupons);
+router.get("/coupons/meta", adminCouponController.getCouponMeta);
+router.get("/coupons/meta/users", adminCouponController.getCouponMetaUsers);
+router.get("/coupons/meta/all-user-ids", adminCouponController.getCouponMetaAllUserIds);
+router.get("/coupons/:id/applicable", adminCouponController.getCouponApplicable);
+router.get("/coupons/:id/history/users", adminCouponController.getCouponHistoryUsers);
+router.get("/coupons/:id/history", adminCouponController.getCouponHistory);
+router.get("/coupons/:id", adminCouponController.getCouponById);
+router.post("/coupons", adminCouponController.createCoupon);
+router.post("/coupons/check-availability", adminCouponController.checkCouponAvailability);
+router.put("/coupons/:id", adminCouponController.updateCoupon);
+router.patch("/coupons/:id/status", adminCouponController.updateCouponStatus);
+router.delete("/coupons/:id", adminCouponController.deleteCouponPermanently);
+
+router.get("/redemption-codes/meta", adminRedemptionController.getRedemptionMeta);
+router.get("/redemption-codes", adminRedemptionController.listRedemptionCodes);
+router.post("/redemption-codes", adminRedemptionController.createRedemptionCode);
+router.post("/redemption-codes/check-name", adminRedemptionController.checkRedemptionCodeName);
+router.get("/redemption-codes/:id/redemptions", adminRedemptionController.listRedemptionLogs);
+router.get("/redemption-codes/:id", adminRedemptionController.getRedemptionCodeById);
+router.put("/redemption-codes/:id", adminRedemptionController.updateRedemptionCode);
+router.patch("/redemption-codes/:id/deactivate", adminRedemptionController.deactivateRedemptionCode);
+router.patch("/redemption-codes/:id/activate", adminRedemptionController.activateRedemptionCode);
 
 module.exports = router;

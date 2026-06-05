@@ -413,11 +413,28 @@
   right: -6px;
   min-width: 16px;
   height: 16px;
+  padding: 0 4px;
   font-size: 10px;
+  font-weight: 700;
   line-height: 16px;
+  text-align: center;
   border-radius: 99px;
   background: #2fc46f;
   color: #fff;
+}
+
+.bell-badge-red {
+  background: #eb4b4b;
+  color: #fff;
+}
+
+.side-navigation .menu-parent .support-unread-badge {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.side-navigation .sidebar-logout-btn {
+  width: 100%;
 }
 
 .avtar-img .admin {
@@ -3572,12 +3589,26 @@ a.edit-icon-btn {
   margin-top: 0;
 }
 
+.manage-support-page .support-page-head {
+  margin-bottom: 12px;
+}
+
+.manage-support-page .support-page-head-left {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
 .manage-support-page .support-summary-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(140px, 1fr));
   gap: 12px;
   margin-bottom: 16px;
   max-width: 540px;
+}
+
+.manage-support-page .support-summary-row--top {
+  margin-top: 4px;
+  margin-bottom: 0;
 }
 
 .manage-support-page .support-summary-row .editorial-stat-card {
@@ -4565,4 +4596,274 @@ a.edit-icon-btn {
     max-height: none;
     min-height: 420px;
   }
+}
+
+.manage-coupon-page .page-head {
+  margin-bottom: 24px;
+}
+
+.manage-coupon-page .page-head h4 {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.manage-coupon-page .data-table {
+  margin-top: 0;
+}
+
+.manage-coupon-page .coupon-name-link {
+  color: #4c72dd;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.manage-coupon-page .coupon-name-link:hover {
+  text-decoration: underline;
+}
+
+.manage-coupon-page .coupon-packages-cell,
+.manage-coupon-page .coupon-users-cell {
+  min-width: 200px;
+  max-width: 320px;
+  font-size: 13px;
+  line-height: 1.45;
+  vertical-align: top;
+}
+
+.manage-coupon-page .coupon-history-scroll {
+  overflow-x: auto;
+}
+
+.manage-coupon-page .coupon-usage-summary th,
+.manage-coupon-page .coupon-usage-summary td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.manage-coupon-page.create-pr-legacy-page .form-group-flex .fg3 {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+.manage-coupon-page .coupon-select-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.manage-coupon-page .coupon-select-all span {
+  background: #2e61f2;
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 15px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.manage-coupon-page .coupon-select-all-users span {
+  background: #2d3540;
+}
+
+.manage-coupon-page .coupon-multi-select__control {
+  border-radius: 6px;
+  border-color: #d5deef;
+  min-height: 42px;
+}
+
+.manage-coupon-page .distribution-table-card.is-loading {
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.manage-coupon-page .coupon-packages-more-btn {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #4c72dd;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.manage-coupon-page .coupon-packages-more-btn:hover {
+  color: #2e4eb8;
+}
+
+.manage-coupon-page .coupon-packages-view-btn {
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.coupon-applicable-modal {
+  width: min(720px, 94vw);
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.coupon-applicable-modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.coupon-applicable-meta {
+  font-size: 13px;
+  color: #5c6378;
+}
+
+.coupon-applicable-modal-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .coupon-applicable-modal-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.coupon-applicable-section {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.coupon-applicable-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a2b4a;
+  margin-bottom: 8px;
+}
+
+.coupon-applicable-count {
+  font-weight: 500;
+  color: #6b7280;
+  margin-left: 4px;
+}
+
+.coupon-applicable-list {
+  list-style: none;
+  padding: 10px 12px;
+  margin: 0;
+  border: 1px solid #e5eaf3;
+  border-radius: 8px;
+  background: #f8fafc;
+  max-height: 50vh;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.coupon-applicable-list li {
+  padding: 4px 0;
+  border-bottom: 1px solid #eef2f8;
+}
+
+.coupon-applicable-list li:last-child {
+  border-bottom: none;
+}
+
+.coupon-applicable-more-note {
+  line-height: 1.4;
+}
+
+.manage-coupon-page .coupon-users-summary {
+  margin-bottom: 0.35rem;
+}
+
+.coupon-history-subtitle {
+  font-size: 14px;
+}
+
+.coupon-history-packages-scroll {
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.coupon-history-users-section {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid #e5eaf3;
+}
+
+.coupon-history-users-panel .coupon-history-users-controls {
+  margin-bottom: 10px;
+}
+
+.coupon-history-users-list {
+  max-height: 360px;
+}
+
+.coupon-history-users-list.is-loading {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.coupon-history-users-list .coupon-applicable-list {
+  max-height: 360px;
+}
+
+.manage-coupon-page .field-error,
+.manage-coupon-page.create-pr-legacy-page .field-error {
+  color: #d81717;
+  font-weight: 700;
+  font-size: 13px;
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
+.manage-redemption-page .redemption-status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.manage-redemption-page .redemption-status-active {
+  background: #e8f7ee;
+  color: #1a7a3a;
+}
+
+.manage-redemption-page .redemption-status-inactive {
+  background: #eef1f6;
+  color: #5a6478;
+}
+
+.manage-redemption-page .redemption-status-expired {
+  background: #fff4e5;
+  color: #b36b00;
+}
+
+.manage-redemption-page .redemption-status-depleted {
+  background: #fdecea;
+  color: #c62828;
+}
+
+.manage-redemption-page .redemption-view-icon-btn {
+  background: #3a9f6e;
+}
+
+.manage-redemption-page .redemption-radio-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.manage-redemption-page .redemption-radio-label input {
+  margin-right: 8px;
 }

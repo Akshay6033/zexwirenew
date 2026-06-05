@@ -14,7 +14,87 @@ function editorialTabActive(location, expectedTab) {
   return cur === expectedTab;
 }
 
-function AdminSidebar() {
+const MENU_DEFAULTS = {
+  manageUsers: false,
+  editorialRoom: false,
+  managePackages: false,
+  managePaymentHistory: false,
+  invoiceManagement: false,
+  analytics: false,
+  marketing: false
+};
+
+/** Only expand the submenu that contains the current page (not all menus on refresh). */
+function menusForPath(pathname) {
+  const open = { ...MENU_DEFAULTS };
+
+  if (
+    pathname === "/users" ||
+    pathname.startsWith("/users/deleted") ||
+    /^\/users\/\d+/.test(pathname)
+  ) {
+    open.manageUsers = true;
+  }
+
+  if (
+    pathname.startsWith("/admindashboard/manage_editorial") ||
+    pathname.startsWith("/admindashboard/manage_gallery") ||
+    pathname.startsWith("/admindashboard/press-release") ||
+    pathname.startsWith("/admindashboard/manage_category")
+  ) {
+    open.editorialRoom = true;
+  }
+
+  if (
+    pathname.startsWith("/admindashboard/manage_package") ||
+    pathname.startsWith("/admindashboard/pricing-page-sequencer")
+  ) {
+    open.managePackages = true;
+  }
+
+  if (
+    pathname.startsWith("/admindashboard/manage_payment_method") ||
+    pathname.startsWith("/admindashboard/manage_payment_history") ||
+    pathname.startsWith("/admindashboard/view_payment_history")
+  ) {
+    open.managePaymentHistory = true;
+  }
+
+  if (
+    pathname.startsWith("/admindashboard/manage_invoice_company") ||
+    pathname.startsWith("/admindashboard/edit_invoice_details") ||
+    pathname.startsWith("/admindashboard/manage_invoice")
+  ) {
+    open.invoiceManagement = true;
+  }
+
+  if (
+    pathname.startsWith("/admindashboard/redemption_codes") ||
+    pathname.startsWith("/admindashboard/add_redemption_code") ||
+    pathname.startsWith("/admindashboard/edit_redemption_code") ||
+    pathname.startsWith("/admindashboard/redemption_code_logs")
+  ) {
+    open.marketing = true;
+  }
+
+  if (
+    pathname.startsWith("/admindashboard/analytics") ||
+    pathname.startsWith("/admindashboard/overviewdashboard") ||
+    pathname.startsWith("/admindashboard/prdashboard") ||
+    pathname === "/admindashboard/PR" ||
+    pathname.startsWith("/admindashboard/sale_dashboard") ||
+    pathname.startsWith("/admindashboard/userdashboard") ||
+    pathname.startsWith("/admindashboard/view_total_package_details") ||
+    pathname === "/admindashboard/sales" ||
+    pathname === "/admindashboard/users"
+  ) {
+    open.analytics = true;
+  }
+
+  return open;
+}
+
+function AdminSidebar({ onLogout }) {
   const location = useLocation();
   const salesNavTo = useMemo(() => {
     const { start, end } = defaultSalesRange();
@@ -30,47 +110,14 @@ function AdminSidebar() {
   const onEditorialStatusClick = (tab) => () => {
     clearTabBadge(tab);
   };
-  const [openMenus, setOpenMenus] = useState({
-    manageUsers: false,
-    editorialRoom: false,
-    managePackages: true,
-    managePaymentHistory: true,
-    invoiceManagement: false,
-    analytics: false
-  });
+  const [openMenus, setOpenMenus] = useState(() => menusForPath(window.location.pathname));
 
   const toggleMenu = (key) => {
     setOpenMenus((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   useEffect(() => {
-    if (
-      location.pathname.startsWith("/admindashboard/manage_editorial") ||
-      location.pathname.startsWith("/admindashboard/manage_gallery") ||
-      location.pathname.startsWith("/admindashboard/press-release")
-    ) {
-      setOpenMenus((prev) => ({ ...prev, editorialRoom: true }));
-    }
-    if (
-      location.pathname.startsWith("/admindashboard/manage_invoice_company") ||
-      location.pathname.startsWith("/admindashboard/edit_invoice_details") ||
-      location.pathname.startsWith("/admindashboard/manage_invoice")
-    ) {
-      setOpenMenus((prev) => ({ ...prev, invoiceManagement: true }));
-    }
-    if (
-      location.pathname.startsWith("/admindashboard/analytics") ||
-      location.pathname.startsWith("/admindashboard/overviewdashboard") ||
-      location.pathname.startsWith("/admindashboard/prdashboard") ||
-      location.pathname === "/admindashboard/PR" ||
-      location.pathname.startsWith("/admindashboard/sale_dashboard") ||
-      location.pathname.startsWith("/admindashboard/userdashboard") ||
-      location.pathname.startsWith("/admindashboard/view_total_package_details") ||
-      location.pathname === "/admindashboard/sales" ||
-      location.pathname === "/admindashboard/users"
-    ) {
-      setOpenMenus((prev) => ({ ...prev, analytics: true }));
-    }
+    setOpenMenus(menusForPath(location.pathname));
   }, [location.pathname]);
 
   const packageScope = new URLSearchParams(location.search).get("scope") || "all";
@@ -281,6 +328,40 @@ function AdminSidebar() {
               <span>Manage Country</span>
             </NavLink>
           </li>
+          <li className="menu-list">
+            <NavLink to="/admindashboard/manage_coupon" className="menu-parent">
+              <span className="menu-icon-svg" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="16" height="16">
+                  <path
+                    fill="currentColor"
+                    d="M7 4a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V9.83a3 3 0 0 0-.88-2.12l-3.83-3.83A3 3 0 0 0 13.17 4H7Zm0 2h6v4h4v9a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Zm8 .41L18.59 10H15V6.41ZM9 12h6v2H9v-2Zm0 4h4v2H9v-2Z"
+                  />
+                </svg>
+              </span>
+              <span>Manage Coupons</span>
+            </NavLink>
+          </li>
+          <li className={`menu-list has-children ${openMenus.marketing ? "expanded" : ""}`}>
+            <button type="button" className="menu-parent menu-parent-btn" onClick={() => toggleMenu("marketing")}>
+              <span className="menu-icon-svg" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="16" height="16">
+                  <path
+                    fill="currentColor"
+                    d="M3 5a2 2 0 0 1 2-2h4l2 2h10a2 2 0 0 1 2 2v3H3V5Zm0 7h20v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7Zm6 2v2h2v-2H9Zm4 0v2h6v-2h-6Z"
+                  />
+                </svg>
+              </span>
+              <span>Marketing</span>
+              <span className="menu-arrow">{openMenus.marketing ? "⌄" : "›"}</span>
+            </button>
+            {openMenus.marketing && (
+              <ul className="child-list">
+                <li>
+                  <NavLink to="/admindashboard/redemption_codes">Redemption Codes</NavLink>
+                </li>
+              </ul>
+            )}
+          </li>
           <li className={`menu-list has-children ${openMenus.managePaymentHistory ? "expanded" : ""}`}>
             <button type="button" className="menu-parent menu-parent-btn" onClick={() => toggleMenu("managePaymentHistory")}>
               <span className="menu-icon-svg" aria-hidden="true">
@@ -371,9 +452,25 @@ function AdminSidebar() {
               </span>
               <span>Support</span>
               {supportUnread > 0 ? (
-                <span className="dot-badge green">{supportUnread > 99 ? "99+" : supportUnread}</span>
+                <span className="dot-badge red support-unread-badge">
+                  {supportUnread > 99 ? "99+" : supportUnread}
+                </span>
               ) : null}
             </NavLink>
+          </li>
+          <li className="menu-list">
+            <button type="button" className="menu-parent menu-parent-btn sidebar-logout-btn" onClick={onLogout}>
+              <span className="menu-icon-svg" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="16" height="16">
+                  <path
+                    fill="currentColor"
+                    d="M10 3h4a2 2 0 0 1 2 2v3h-2V5h-4v14h4v-3h2v3a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm6.59 5.59L21 13l-4.41 4.41L15.17 16l2-2H12v-2h5.17l-2-2 1.42-1.41Z"
+                  />
+                </svg>
+              </span>
+              <span>Logout</span>
+              <span className="menu-arrow menu-arrow-empty">›</span>
+            </button>
           </li>
         </ul>
       </div>

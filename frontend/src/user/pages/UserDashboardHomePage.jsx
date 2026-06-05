@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import checkoutApi from "../../public/services/checkoutApi";
 import { clearUserSession, saveUserSession } from "../../public/services/publicAuthApi";
 import { useUserDashboard } from "../context/UserDashboardContext";
 import { userDashboardApi } from "../services/userDashboardApi";
@@ -18,7 +20,9 @@ import iconNotification from "../assets/icons/notification.svg";
 const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 
 function PackageDetailsTable() {
+  const navigate = useNavigate();
   const [rows, setRows] = useState([]);
+  const [startingPackageId, setStartingPackageId] = useState(null);
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 10,
@@ -70,6 +74,28 @@ function PackageDetailsTable() {
   useEffect(() => {
     loadPackages();
   }, [loadPackages]);
+
+  const startPackageCheckout = async (packageId) => {
+    setStartingPackageId(packageId);
+    try {
+      const res = await checkoutApi.start(packageId);
+      const url = res.data?.data?.checkoutUrl;
+      if (url) {
+        navigate(url);
+      } else {
+        toast.error("Could not start checkout");
+      }
+    } catch (err) {
+      if (err.sessionExpired || err.response?.status === 401) {
+        toast.error("Session expired. Please sign in again.");
+        navigate("/sign_in", { replace: true });
+        return;
+      }
+      toast.error(err.response?.data?.message || "Could not start checkout.");
+    } finally {
+      setStartingPackageId(null);
+    }
+  };
 
   const { totalPages = 1, rangeStart = 0, rangeEnd = 0, total = 0 } = pagination;
 
@@ -151,14 +177,24 @@ function PackageDetailsTable() {
                   <td>{formatPackageExpiry(item.package_end_date)}</td>
                   <td>
                     {Number(item.status) === 0 && Number(item.usepr_limit) === 0 && (
-                      <Link to={`/pricing?package=${item.package_id}`} className="buy">
-                        Buy Again
-                      </Link>
+                      <button
+                        type="button"
+                        className="buy"
+                        disabled={startingPackageId === item.package_id}
+                        onClick={() => startPackageCheckout(item.package_id)}
+                      >
+                        {startingPackageId === item.package_id ? "Loading…" : "Buy Again"}
+                      </button>
                     )}
                     {Number(item.status) === 0 && Number(item.usepr_limit) !== 0 && (
-                      <Link to={`/pricing?package=${item.package_id}`} className="buy">
-                        Package Expired Buy
-                      </Link>
+                      <button
+                        type="button"
+                        className="buy"
+                        disabled={startingPackageId === item.package_id}
+                        onClick={() => startPackageCheckout(item.package_id)}
+                      >
+                        {startingPackageId === item.package_id ? "Loading…" : "Package Expired Buy"}
+                      </button>
                     )}
                   </td>
                 </tr>

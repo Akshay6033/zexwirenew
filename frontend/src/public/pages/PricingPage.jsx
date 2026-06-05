@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { publicApi } from "../services/publicApi";
+import checkoutApi from "../services/checkoutApi";
 import { isUserLoggedIn } from "../services/publicAuthApi";
-
-const PR_PORTAL = "https://pr.zexprwire.com";
 
 const SECTION_NAV = [
   { key: "", label: "PR Distribution", path: "/pricing" },
@@ -87,12 +87,15 @@ function packageMatchesSearch(pkg, query) {
   return (pkg.descriptions || []).some((d) => String(d.des || "").toLowerCase().includes(q));
 }
 
-function PricingCard({ pkg, featured, variant }) {
-  const userId = localStorage.getItem("userId");
-  const buyHref =
-    isUserLoggedIn() && userId
-      ? `${PR_PORTAL}/payment_page/${pkg.id}/${userId}`
-      : "/sign_in";
+function PricingCard({ pkg, featured, variant, onBuy, buying }) {
+  const handleBuy = (e) => {
+    e.preventDefault();
+    if (!isUserLoggedIn()) {
+      window.location.href = "/sign_in";
+      return;
+    }
+    onBuy(pkg);
+  };
 
   return (
     <div className={`pricing-card-col ${featured ? "pricing-card-col--featured" : ""}`}>
@@ -117,9 +120,14 @@ function PricingCard({ pkg, featured, variant }) {
               <sup>$</sup>
               {pkg.price}
             </div>
-            <a href={buyHref} className={`pricing-card__buy ${featured ? "pricing-card__buy--primary" : ""}`}>
-              Buy Now
-            </a>
+            <button
+              type="button"
+              className={`pricing-card__buy ${featured ? "pricing-card__buy--primary" : ""}`}
+              onClick={handleBuy}
+              disabled={buying}
+            >
+              {buying ? "Starting…" : "Buy Now"}
+            </button>
           </div>
         </div>
       </article>
@@ -147,8 +155,10 @@ function PricingSkeleton() {
 export default function PricingPage() {
   const { section: sectionParam } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const section = normalizeSection(sectionParam);
 
+  const [buyingPackageId, setBuyingPackageId] = useState(null);
   const [packages, setPackages] = useState([]);
   const [availableCategories, setAvailableCategories] = useState([]);
   const [banner, setBanner] = useState(null);
@@ -235,6 +245,32 @@ export default function PricingPage() {
 
   const clearFilters = () => {
     setSearchParams({}, { replace: true });
+  };
+
+  const handleBuyPackage = async (pkg) => {
+    if (!isUserLoggedIn()) {
+      navigate("/sign_in");
+      return;
+    }
+    setBuyingPackageId(pkg.id);
+    try {
+      const res = await checkoutApi.start(pkg.id);
+      const url = res.data?.data?.checkoutUrl;
+      if (url) {
+        navigate(url);
+      } else {
+        toast.error("Could not start checkout");
+      }
+    } catch (err) {
+      if (err.sessionExpired || err.response?.status === 401) {
+        toast.error("Session expired. Please sign in again.");
+        navigate("/sign_in");
+        return;
+      }
+      toast.error(err.response?.data?.message || "Could not start checkout. Please sign in and try again.");
+    } finally {
+      setBuyingPackageId(null);
+    }
   };
 
   const bannerSrc = banner?.image
@@ -353,6 +389,8 @@ export default function PricingPage() {
                 pkg={pkg}
                 featured={Number(pkg.badge) === 1}
                 variant={meta.variant === "crypto" || pkg.categoryKey === "crypto" ? "crypto" : ""}
+                onBuy={handleBuyPackage}
+                buying={buyingPackageId === pkg.id}
               />
             ))}
           </div>

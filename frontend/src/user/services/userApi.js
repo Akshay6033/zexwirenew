@@ -1,4 +1,5 @@
 import axios from "axios";
+import { clearUserSession } from "../../public/services/publicAuthApi";
 
 const userApi = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "/api",
@@ -12,5 +13,16 @@ userApi.interceptors.request.use((config) => {
   }
   return config;
 });
+
+userApi.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (error.response?.status === 401) {
+      clearUserSession();
+      error.sessionExpired = true;
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default userApi;

@@ -148,5 +148,33 @@ export const adminDashboardApi = {
     }),
   resolveSupportTicket: (id, payload) => api.post(`/admindashboard/support/tickets/${id}/resolve`, payload),
   approveSupportTicket: (id) => api.post(`/admindashboard/support/tickets/${id}/approve`),
-  declineSupportTicket: (id) => api.post(`/admindashboard/support/tickets/${id}/decline`)
+  declineSupportTicket: (id) => api.post(`/admindashboard/support/tickets/${id}/decline`),
+
+  getCoupons: (params, config) => api.get("/admindashboard/coupons", { params, ...(config || {}) }),
+  getCouponMeta: () => api.get("/admindashboard/coupons/meta"),
+  getCouponMetaUsers: (params) => api.get("/admindashboard/coupons/meta/users", { params }),
+  getCouponMetaAllUserIds: () => api.get("/admindashboard/coupons/meta/all-user-ids"),
+  getCouponApplicable: (id) => api.get(`/admindashboard/coupons/${id}/applicable`),
+  getCouponHistory: (id) => api.get(`/admindashboard/coupons/${id}/history`),
+  getCouponHistoryUsers: (id, params, config) =>
+    api.get(`/admindashboard/coupons/${id}/history/users`, { params, ...(config || {}) }),
+  getCouponById: (id) => api.get(`/admindashboard/coupons/${id}`),
+  createCoupon: (payload) => api.post("/admindashboard/coupons", payload),
+  updateCoupon: (id, payload) => api.put(`/admindashboard/coupons/${id}`, payload),
+  checkCouponAvailability: (payload) => api.post("/admindashboard/coupons/check-availability", payload),
+  updateCouponStatus: (id, payload) => api.patch(`/admindashboard/coupons/${id}/status`, payload),
+  deleteCouponPermanently: (id) => api.delete(`/admindashboard/coupons/${id}`),
+
+  getRedemptionCodes: (params, config) =>
+    api.get("/admindashboard/redemption-codes", { params, ...(config || {}) }),
+  getRedemptionMeta: () => api.get("/admindashboard/redemption-codes/meta"),
+  getRedemptionCodeById: (id) => api.get(`/admindashboard/redemption-codes/${id}`),
+  getRedemptionLogs: (id, params) =>
+    api.get(`/admindashboard/redemption-codes/${id}/redemptions`, { params }),
+  createRedemptionCode: (payload) => api.post("/admindashboard/redemption-codes", payload),
+  updateRedemptionCode: (id, payload) => api.put(`/admindashboard/redemption-codes/${id}`, payload),
+  checkRedemptionCodeName: (payload) =>
+    api.post("/admindashboard/redemption-codes/check-name", payload),
+  deactivateRedemptionCode: (id) => api.patch(`/admindashboard/redemption-codes/${id}/deactivate`),
+  activateRedemptionCode: (id) => api.patch(`/admindashboard/redemption-codes/${id}/activate`)
 };

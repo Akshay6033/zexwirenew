@@ -31,7 +31,7 @@ function AdminLayout() {
       <EditorialCountsProvider>
       <SupportCountsProvider>
       <section className="admin-shell">
-        <AdminSidebar />
+        <AdminSidebar onLogout={handleLogout} />
         <div className="body-content">
           <AdminHeader
             username={adminUser.username}

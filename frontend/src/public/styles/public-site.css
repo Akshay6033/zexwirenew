@@ -928,7 +928,14 @@
   font-size: 14px;
   text-decoration: none;
   background: #fff;
+  cursor: pointer;
+  font-family: inherit;
   transition: background 0.2s ease, color 0.2s ease;
+}
+
+.pricing-card__buy:disabled {
+  opacity: 0.65;
+  cursor: wait;
 }
 
 .pricing-card__buy:hover {

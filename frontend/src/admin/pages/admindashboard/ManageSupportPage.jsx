@@ -138,6 +138,13 @@ function ManageSupportPage() {
       const data = res.data?.data || { query_options: [], countries: [], countryCodes: [] };
       const codes = data.countryCodes?.length ? data.countryCodes : data.countries || [];
       setMeta({ ...data, countryCodes: codes });
+      if (data.counts) {
+        setCounts({
+          all: data.counts.all ?? 0,
+          open: data.counts.open ?? data.open_count ?? 0,
+          closed: data.counts.closed ?? 0
+        });
+      }
       const first = codes[0];
       if (first?.label) {
         setAddForm((f) => (f.countryCode === "IND | +91" ? { ...f, countryCode: first.label } : f));
@@ -424,8 +431,36 @@ function ManageSupportPage() {
 
   return (
     <div className={`container-fluid manage-support-page${selectedId ? " support-has-detail" : ""}`}>
-      <div className="page-head manage-user1 d-flex justify-content-between align-items-center flex-wrap gap-2">
-        <h4 className="mt-2 mb-2">Support</h4>
+      <div className="page-head manage-user1 support-page-head d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div className="support-page-head-left">
+          <h4 className="mt-2 mb-2">Support</h4>
+          <div className="support-summary-row support-summary-row--top" role="group" aria-label="Ticket counts">
+            <button
+              type="button"
+              className={`editorial-stat-card editorial-stat-card-link ${statusTab === "all" ? "editorial-stat-card-active" : ""}`}
+              onClick={() => onStatusTab("all")}
+            >
+              <p>All Tickets</p>
+              <h4>{counts.all}</h4>
+            </button>
+            <button
+              type="button"
+              className={`editorial-stat-card editorial-stat-card-link ${statusTab === "open" ? "editorial-stat-card-active" : ""}`}
+              onClick={() => onStatusTab("open")}
+            >
+              <p>Open</p>
+              <h4>{counts.open}</h4>
+            </button>
+            <button
+              type="button"
+              className={`editorial-stat-card editorial-stat-card-link ${statusTab === "closed" ? "editorial-stat-card-active" : ""}`}
+              onClick={() => onStatusTab("closed")}
+            >
+              <p>Closed</p>
+              <h4>{counts.closed}</h4>
+            </button>
+          </div>
+        </div>
         <div className="d-flex gap-2 align-items-center manage-user-head-actions position-relative">
           <button type="button" className="btn add-vendor-btn" onClick={() => setAddOpen(true)}>
             + Add New Query
@@ -465,33 +500,6 @@ function ManageSupportPage() {
             </svg>
           </button>
         </div>
-      </div>
-
-      <div className="support-summary-row">
-        <button
-          type="button"
-          className={`editorial-stat-card editorial-stat-card-link ${statusTab === "all" ? "editorial-stat-card-active" : ""}`}
-          onClick={() => onStatusTab("all")}
-        >
-          <p>All Tickets</p>
-          <h4>{counts.all}</h4>
-        </button>
-        <button
-          type="button"
-          className={`editorial-stat-card editorial-stat-card-link ${statusTab === "open" ? "editorial-stat-card-active" : ""}`}
-          onClick={() => onStatusTab("open")}
-        >
-          <p>Open</p>
-          <h4>{counts.open}</h4>
-        </button>
-        <button
-          type="button"
-          className={`editorial-stat-card editorial-stat-card-link ${statusTab === "closed" ? "editorial-stat-card-active" : ""}`}
-          onClick={() => onStatusTab("closed")}
-        >
-          <p>Closed</p>
-          <h4>{counts.closed}</h4>
-        </button>
       </div>
 
       <div className={`support-split ${selectedId ? "has-detail" : ""}`}>
